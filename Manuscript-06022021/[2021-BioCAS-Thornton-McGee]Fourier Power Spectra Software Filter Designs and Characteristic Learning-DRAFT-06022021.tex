@@ -1,60 +1,23 @@
-\documentclass[12pt,conference]{IEEEtran}
+\documentclass[10pt,conference]{IEEEtran}
 \usepackage[cmex10]{amsmath}
 \usepackage{hyperref}
 \usepackage{graphicx}
-\usepackage{listings}
-\usepackage{color}
 \usepackage{bbm}
-
-\definecolor{mygreen}{rgb}{0,0.6,0}
-\definecolor{mygray}{rgb}{0.5,0.5,0.5}
-\definecolor{mymauve}{rgb}{0.58,0,0.82}
-
-\lstset{ 
-  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
-  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
-  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
-  breaklines=true,                 % sets automatic line breaking
-  captionpos=b,                    % sets the caption-position to bottom
-  commentstyle=\color{mygreen},    % comment style
-  deletekeywords={...},            % if you want to delete keywords from the given language
-  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
-  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
-  firstnumber=1,                % start line enumeration with line 1000
-  frame=single,	                   % adds a frame around the code
-  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
-  keywordstyle=\color{blue},       % keyword style
-  language=R,                 % the language of the code
-  morekeywords={*,...},            % if you want to add more keywords to the set
-  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
-  numbersep=5pt,                   % how far the line-numbers are from the code
-  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
-  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
-  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
-  showstringspaces=false,          % underline spaces within strings only
-  showtabs=false,                  % show tabs within strings adding particular underscores
-  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
-  stringstyle=\color{mymauve},     % string literal style
-  tabsize=2,	                   % sets default tabsize to 2 spaces
-  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
-}
 \hyphenation{op-tical net-works semi-conduc-tor}
-\pagenumbering{gobble}
 
 \begin{document}
 \title{Non-Parametric Genomic Fourier Power Spectra Filter Designs}
-\author{Micah~Thornton,~\IEEEmembership{Student Member,~IEEE,}
-        and~Monnie~McGee,~\IEEEmembership{Member,~IEEE,}% 
-\IEEEcompsocitemizethanks{\IEEEcompsocthanksitem M. Thornton is with the Lyda Hill Department
-of Bioinformatics, University of Texas Southwestern, Dallas,
-TX, 75390.\protect\\
-E-mail: \url{mailto:mathornton@smu.edu}
-\IEEEcompsocthanksitem M. McGee is with the Department of Statistical Science at Southern Methodist University, Dallas, TX, 75206.\protect\\
-E-mail: \url{mailto:mmcgee@smu.edu}}% 
-\thanks{Manuscript received June 10, 2021}}%; revised July ??, 2021}}
 
-\markboth{Eighth Biomedical Circuits and Systems Conference,~October~2021}%
-{Thornton \MakeLowercase{\textit{et al.}}: Fourier Power Spectra No-Lag Matched Filters for Genomic Sequence Differentiation}
+\author{Micah Thornton\\
+Lyda Hill Department of Bioinformatics\\
+University of Texas Southwestern\\
+\href{mailto:micah.thornton@utsouthwestern.edu}{micah.thornton@utsouthwestern.edu}
+\and 
+Monnie McGee\\
+Department of Statistical Science\\
+Southern Methodist University\\
+\href{mailto:mmcgee@smu.edu}{mmcgee@smu.edu}}
+
 \IEEEtitleabstractindextext{%
 \begin{abstract}
 The comparison of genomic sequences is a important undertaking, the granularity with which the sequences are to be compared varies by application.  In this work we describe three procedures that 
@@ -74,52 +37,70 @@ Genomic Signal Analysis,  Genomic Power Spectra Filtering,  Genetic sequence ana
 
 \IEEEpeerreviewmaketitle
 
-\vspace{- 1 em}
 \section{Introduction}
 \label{sec:int}
 
-\IEEEPARstart{G}{enomic} sequences are, in essence, radix four discrete-index signals, 
-and contain essential information required to instantiate and replicate organisms, or non-living matter 
-such as viruses and proteins.
-These sequences are radix-four as a repetitive series of four base nucleotides: adenine, cytosine, guanine, 
-and thymine, in Deoxyribonucleic Acid (DNA) with thymine is replaced by uracil in Ribonucleic Acids 
-(RNA) constitute the information conveyed by the signals. 
-Notably this characterization considers the base form of the genomic sequences as a four-valued signal, 
-some prior works have considered using the hydrophobicity of the translated amino acids in conjunction 
-with spectral methods for the identification of attributes of a sequence. \cite{Shu17} 
-Other works have examined epigenetic marker profiles using signal detection theory \cite{San19}.
-in this work we consider utilization of subsets of characteristic genomic Fourier power spectra which are
-produced by a few different kinds of filtering techniques for examining distances between SARS-CoV-2 virus genomes. 
-This work treats genomic sequences as signals, and defines procedures for reducing the Mixed-Radix \cite{Sin69} Fourier Power Spectra (PS) of these sequences such that Euclidean distances amongst them are preserved. 
-\vspace{-0.5 em}
+\noindent Genomic sequences are, in essence, radix four discretely indexed signals.
+They contain the essential information required to instantiate and replicate organisms
+or non-living matter such as viruses and proteins.
+They can be considered radix-four signals as they consist of repetitive series of four base nucleotides (NTs): 
+adenine, cytosine, guanine, and thymine, in Deoxyribonucleic Acids (DNAs) where thymine is replaced by uracil in transcribed Ribonucleic 
+Acids (RNAs). 
+This characterization considers only the NT arrangement of the genomic sequences.
+Indeed, the analogy to a radix-four signal is limited to the NT nature of genomic sequences, and does not lend itself to further biological 
+attributes such as epigenetic signals.  
+Some other prior works have used, in contrast to the NT sequence itself, the hydrophobicity of the translated 
+amino acid chain in conjunction with spectral methods for sequence attribute discovery. \cite{Shu17} 
+Some have worked with epigenetic marker profiles using signal detection theory \cite{San19}.
+Others do use the NT sequence alone, a recent instance is the application of  Information and Fluctuation theory to genomic signals
+\cite{Dem14}.  
+In this work, we build on the application of spectral analysis to genomic signals utilizing a version of the Mixed Radix Fourier Power Spectra 
+(PS) \cite{Sin69}.
+We consider the utility of filtered subsets of PS coefficients produced by a few techniques, with special focus on preserving relative distances 
+captured by the entire un-filtered genomic PS. 
+To this ends, we apply our Non-parametric data-driven filters to a subset of SARS-CoV-2 virus genomes curated by the GISAID \cite{gisaid} 
+Initiative. 
+
+This paper's remainder is arranged thusly: first, a discussion of the critical prior works is displayed through a description of the signal flow for 
+genomic information from genetic material to the PS in Section \ref{sec:pw}.  Second, the three novel directions (PS filter designs) of this work 
+are described in detail in Section \ref{sec:meth}. Following this, a case study of application for the three filters in a sampling of SARS-CoV-2 
+virus genomes, curated by the GISAID Initiative and downloaded on August 20, 2021, is demonstrated and a comparison of the  approaches 
+undertaken in Section \ref{sec:res}. In concluding section \ref{sec:conc}, remarks are made on the benefits and drawbacks of the three filter designs, an 
+assessment of the filtered PS in the case study is given, and extensions to the work discussed herein provided.  
+Acknowledgements, references, a dictionary of abbreviations, and discussion utilized and constituted software complete with video demonstration link follow the conclusion.
+
 \section{Prior Works}
 \label{sec:pw}
-The concept of taking Discrete-Time Fourier Transforms (here ``time'' refers to loci along a genomic signal) 
-of genomic signals dates back to the early 1990`s.  Anastassiou provides a summary of these and other
-genomic signal processing techniques \cite{Ana01}.
-More recently, genomic signals have been investigated from the perspective of 
-Information and Fluctuation theory \cite{Dem14}.  
-Yin et al. were the first to suggest the use of Fourier coefficients, and the resultant power spectra as 
-numerical summaries for distance calculations and subsequent automated phylogeny construction with 
-genomic sequences \cite{yin20, yin14, yin15,pei19,Hoa15}.
-In these works the power spectra of the coefficients were subject to an even stretching (scaling) procedure 
-where power spectra of shorter sequences were extended such that all sequences were of the same length
-\vspace{-0.5 em} 
-\subsection{Encoding \& Transforming Genomic Sequences}
-Genomic/proteomic signals when digitized are usually stored in ASCII text encoded files known as FASTA/Q 
-files.  Initially this acronym stood for Fast-All, referring to the capability to store any alphabet based 
-sequence, for biomolecular sequences these refered to mostly genetic and proteomic sequences \cite{Lip85}.  
-Prior to their storage in FASTA files, NT sequences are presented in the organic materials within which they reside, an enormously dense and resilient storage system the likes of which our engineers have not been able to reproduce. 
-Once the material has been analyzed using one of many different sequencing technologies (for a nice review of modern sequencing techniques see Metzker \cite{Met10} or Slatko \cite{Sla18}) it is generally stored either directly in FASTA/Q or sometimes intermediary files (such as intensity images for micro-array data). 
-Generally the genomic sequence data once captured is processed using one of a set of bioinformatic procedures. 
-Usually assembly or alignment is the desired goal of researchers working with genetic data from the 
-earliest stages, and one of the many bioinformatic tools designed for the purpose.  
-Some popular examples of aligners include: HISAT, \cite{kim15} HISAT2\cite{Kim19}, bowtie2 \cite{lan12}, and BWA \cite{li09}  (for general DNA sequencing) or aligners like HISAT3N \cite{Zha20} (for sequencing Bisulfite-treated reads).
-Following this, the sequences (usually stored in FASTA/Q again after intermediate processing through SAM/BAM formats)
-Next the user will generally determine whether they wish for the sequence to be encoded using four-vectors or two-vectors \cite{Vos92}. 
-The mapping into four vectors is displayed below in Equation \ref{eqn:fvec}, and one of the possible two-vector encodings for reference is displayed in Equation \ref{eqn:tvec}. 
+\noindent The application of Discrete-Time Fourier Transforms (DFT) to genomic signals, with``time'' referring to loci, dates back to the early 1990`s.  
+Anastassiou provides a summary of these and other genomic signal processing techniques in 2001 \cite{Ana01}.
+Yin et al. suggested the use of the genomic PS as numerical summaries for distance calculations and phylogeny construction in 2014 
+\cite{yin20, yin14, yin15,pei19,Hoa15}.
+To render them comparable, the genomic PS are subject to an even stretching (scaling) procedure defined in Yin et al.'s 2014 work, 
+where shorter PS are extended so all genomic sequences are represented by PS of the same lengths. 
 
-\noindent {\small
+\subsection{Encoding \& Transforming Genomic Sequences}
+\noindent Genomic/proteomic signals when digitized can be stored in ASCII encoded files in FASTA/Q format.  
+FASTA stands for Fast-All  \cite{Lip85}, in reference to the storage capabilities of the format for any alphabet based sequence.
+For biomolecular sequences these are mostly genetic or proteomic sequences.  
+NT sequences are presented in the organic materials such as DNAs and RNAs, enormously dense and ultra resilient storage systems of natural origin. 
+The harvested organic material having been analyzed by sequencing technology (for a review of sequencing techniques see Metzker \cite{Met10} or Slatko \cite{Sla18}) yields a NT sequence, stored either directly in FASTA/Q or other formats (such as intensity images for micro-array data). 
+
+Generally, once sequenced, genomic data is processed using bioinformatic procedures towards a certain aim. 
+If assembly or alignment is researcher's goal a sequence assembler, or aligner may be used.  
+An assembler is a tool that builds a long sequence from fragmented shorter sequences such as those produced during sequencing.
+An aligner uses a reference sequence (sometimes built previously using an assembler) and places shorter sequences (called reads)
+ along the reference.
+Popular aligners for regular DNA sequencing include: HISAT, \cite{kim15} HISAT2\cite{Kim19}, bowtie2 \cite{lan12}, and BWA \cite{li09}.
+Some special purpose aligners for handeling certain kinds of sequencing data.
+For instance, NT-conversion data from sequencing procedures like bisulfite-sequencing, and SLAM-seq is more easily handeled by aligners such as HISAT3N \cite{Zha20}.
+
+Following alignment or assembly, sequences are stored in FASTA/Q after intermediate processing through other more convenient formats such as SAM/BAM/CRAM. 
+If a researcher working with the sequences is going to generate the PS for this genomic sequence in efforts to compare it to other sequences of the same kind they must first determine whether they wish it to be encoded using four-vectors or two-vectors \cite{Vos92}.
+This decision does not always result in contesting relative distance calculations further down the line, but it was suggested by Yin et al in 2015 \cite{yin15} 
+that encoding using two-vectors with a strategy picked to attempt to ``balance'' the signals will provide better PS representations.  
+The mapping into four-vectors is Equation \ref{eqn:fvec}, and one possible two-vector encoding, for reference, is Equation \ref{eqn:tvec}. 
+
+\noindent 
 \begin{align}
 \begin{split}
 \label{eqn:fvec}
@@ -127,10 +108,9 @@ V_4[\cdot] &\equiv \{A,C,G,T/U\} \mapsto \\
 & \{ [1,0,0,0]^T,[0,1,0,0]^T,[0,0,1,0]^T,[0,0,0,1]^T\}
 \end{split}
 \end{align}
-}
-\vspace{-1 em}
 
-\noindent {\small
+
+\noindent 
 \begin{align}
 \begin{split}
 \hspace{-8 em}
@@ -139,27 +119,28 @@ V_{2AT}[\cdot] &\equiv\{A,C,G,T/U\} \mapsto \\
 & \{ [0,-1]^T,[-1,0]^T,[1,0]^T,[0,1]^T\}
 \end{split}
 \end{align}
-}
-\vspace{-0.5 em}
 
-Once one of these transforms is applied to the sequences in order to produce a series of numerical vectors, 
-the PS as described by Singleton in 1969 \cite{Sin69} is applied to either the 
-four signals (when using $V_4$)  or two signals (when using, for instance, $V_{2AT}$) and the results 
-are averaged together by position, providing a single PS of the same length as the initial signal. 
 
-\vspace{-0.5 em}
+The PS, as described by Singleton in 1969 \cite{Sin69}, is computed for each row of the encoded genomic signals (four times for $V_4$, and two for $V_{2AT}$).
+The resulting PS are then averaged together by position, providing a single PS of the same length as the initial signal. 
+If this PS is to be compared to others in an ensemble of signals, a direct comparison method is the 
+computation of the Euclidean distance between the PS. 
+
+However, it is often that there are insertions and deletions in two genomic sequences of the same kind 
+which render their PS incomparable directly in this manner due to the length disparity. 
+When this is the case, the researcher may compensate by applying a procedure that stretches the 
+shorter sequence to align it's length with that of the longer sequence. 
+Such a procedure was proposed by Yin et al. in 2015 \cite{yin15}, and is described in detail in the next section. 
+
+
 \subsection{Evenly Scaling Power Spectra} 
-To perform direct comparisons of one sequence to another, the ensemble which is being compared
-may have their power spectra stretched out to be of the same length as that of the maximal length in 
-the sequence.  The procedure by which this is done is described initially by Yin and Yau \cite{yin15} in 
-their work describing distances computed using the distance between DFT PS.  The procedure 
-scans through the shorter sequence and takes either a single PS coefficient, or a pair of coefficients to 
-produce a signal of the same length as the longer.  The formula used is expressed in Equation \ref{eq:evscal}. 
+\noindent  The procedure, named ``the even scaling procedure'',  
+scans through the shorter sequence taking either a single PS coefficient, or a pair of coefficients, and 
+averaging them to produce a signal of the same length as that of the longer.  
+The formula used is expressed in Equation \ref{eq:evscal}. 
 
+Formally, let $A_n$ denote the original power spectrum of length $n$, and $A_m$ denote the extended power spectrum of length $m$, where $m > n$ and $k=1,2,\dots,m$ indexes the scaled signal. The even scaling operation from $A_n$ to $A_m$ is given by
 
-Formally, let $A_n$ denote the original power spectrum of length $n$, and $A_m$ denote the extended power spectrum of length $m$, where $m > n$. The even scaling operation from $A_n$ to $A_m$ is given by
-\vspace{-0.5 em}
-{\small
 \begin{align}
 \begin{split}
 &A_m(k)=\\
@@ -169,51 +150,54 @@ Formally, let $A_n$ denote the original power spectrum of length $n$, and $A_m$ 
 \label{eq:evscal}
 \end{split}
 \end{align}
-}
 
-\vspace{-0.5 em}
-\noindent where $Q = \frac{kn}{m}$ and $R = \lfloor \frac{kn}{m} \rfloor$ \cite{yin15}. This even scaling algorithm is extensible to signal length differences of up to one half the size of the smaller signal without providing substantive loss in terms of information content.
 
-\vspace{-1 em}
+\noindent where $Q = \frac{kn}{m}$ and $R = \lfloor \frac{kn}{m} \rfloor$ \cite{yin15}. The \textit{even scaling procedure} is extensible to signal length differences of up to one half the size of the smaller signal without providing substantive loss in terms of information content, although systematically it may be applied in cases where the length difference exceeds this boundary.
+
 \begin{figure}[h!]
 \caption{Genomic Signal Flow Diagram for Mixed-Radix Power Spectra Calculation} 
 \label{fig:fftflow} 
 \begin{center} 
-\includegraphics[scale=0.45]{Images/Files/GenomicFFTSignalFlow.png}
+\includegraphics[scale=0.6]{Images/Files/GenomicFFTSignalFlow.png}
 \end{center} 
 \end{figure} 
 
-
-A signal flow diagram describing the entire flow of information from the genetic material the genomic 
-signal was extracted from all the way down to the produce power spectra ensemble is shown in Figure 
-\ref{fig:fftflow}.  The \textit{evenly scaled} PS are the numerical summaries of the sequences to which 
-the subsequent filtering and characteristic learning procedures described in the methods section are applied.
+A signal flow diagram describing the information stream from the genetic material to the produced \textit{evenly scaled} PS is represented in Figure \ref{fig:fftflow}.  
+The \textit{evenly scaled} PS are the numerical summaries of the sequences to which 
+the novel filtering procedures are applied.
+These three filtering approaches are introduced in the next section, and applied to SARS-CoV-2 viral genomes in that which follows it. 
 
 
 \section{Methods \& Design}
 \label{sec:meth}
 
-The approaches discussed here seek to determine appropriate subsets of the PS 
-which may be used to appropriately numerically summarize genomic signals such as DNA and RNA. 
-These procedures seek to reduce the extent of the PS analyzed while maintaining the
-relative ordering of distances among the pairs of sequences analyzed.  
-In this work, three different approaches to filtering the PS are suggested, and there relative utilities are 
-assessed, by using Pearson's Correlation coefficient to measure the similarity between the Euclidean 
-distances produced when using the full unfiltered PS, and those produced when using the filtered PS. 
+\noindent These approaches to filtering the PS were designed to determine appropriate subsets which might be used to numerically summarize genomic signals such as DNA and RNA while retaining the 
+distance information provided by the fully unfiltered PS. 
+In this way, they reduce the extent of the PS analyzed and maintain relative orderings of pair-wise distances among sequences analyzed.  
+
+Three approaches are suggested, and their utilities examined.
+Retention of pair-wise distance ordering is assessed with Pearson's Correlation coefficient ($\rho$) to measure the linear relationship between Euclidean distances among full unfiltered PS, and reduced filtered PS. 
+As the techniques described here are non-parametric and data-driven either a representative sample 
+for construction of the filters must be selected among those available, or the entire set may be used 
+to derive an ensemble-specific set of filters. 
+This means that for new genomic signals collected, the same filters may be applied, however if the filters themselves may also be reconstructed including the newly 
+gathered signals in their construction.
+The newly constructed filters may not be identical to those that are produced by the original subset of the data. 
+Thus, the filters may be updated whenever a new signal is added to the ensemble, we leave fast updates to extant filters as a future direction of this work. 
+
+These filter designs are implemented in software, but we note that hardware designs for 
+these filters are possible, though may prove unwieldy, and a middle ground approach such as the 
+coding of these filters in the firmware of a microcontroller is an acceptable hardware solution.  
 Each of the approaches suggested are applicable only after a substantive base data supply has been 
 collected. 
-This means that for new genomic signals which are collected, the same filters may be applied to their 
-PS, however if the filters themselves were to be reconstructed with the data set that includes the newly 
-gathered signals, than they may not be identical to those that are produced by a subset of the data. 
+. 
 
 \subsection{Minimal Variance Filtering} 
 
-The first approach discussed is based on a single value, the percentage of PS coefficients to filter. 
-After the PS have been computed for a sample of data a researcher wishes to compare, the variance of either the entire 
-sample, or some representative subsample at each position along the PS is computed, next the user supplied filtering 
-parameter $q$, the fraction of the coefficients by which to reduce the original PS, is used to determine which variance should be the cutoff in the data.  
+\noindent With the specification of the percentage of PS coefficients to filter, $q$, a minimal variance filtering technique can exclude those PS coefficients which vary the least amongst the sample. 
+The variance of each of the $j=1,2,\dots,m$ elements of the \textit{evenly-scaled} PS ensemble for either the entire sample, or some representative subsample is computed.
+The supplied $q$, fraction of the coefficients by which to reduce the original PS, is used to determine which variance should be the cutoff in the data, in accordance with the formulae displayed in Equation \ref{eq:var}. 
 
-\vspace{-1 em}
 \begin{align} 
 \label{eq:var}
 \begin{split}
@@ -223,165 +207,180 @@ S^*_{il} =& \left\{ S_{ij} \Bigg\vert v_j \geq \eta^* \right\}
 \end{split}
 \end{align}
 
-\vspace{-0.5 em} 
-Equation \ref{eq:var} shows how a variance filtering approach can be applied to 
-a genomic PS coefficient $j = 1,2,\dots m$ for sample $i = 1,2,\dots,N$, $S_{ij}$ to produce  the filtered PS $S_{il}$ for $l = 1,2,\dots,\lfloor m \cdot q \rfloor$. 
-In other words, the filtered PS $S_{il}$ are produced by selecting only those PS coefficients from the unfiltered PS that have the largest across sample variances. 
-In the results section we will see how this approach to filtering the PS changes the 
-distances that are calculated amongst the elements of the sample.  This filtering process may be considered as semi-analagous to that of a \textit{matched filter} from 
+
+The variance filtering approach is applied to genomic PS coefficients  $S_{ij}$, for coefficient $j = 1,2,\dots m$ of sample $i = 1,2,\dots,N$, to produce filtered PS $S_{il}$ for $l = 1,2,\dots,\lfloor m \cdot q \rfloor$. The filtered PS $S_{il}$ are produced by selecting only those PS coefficients from the unfiltered PS that have the largest across-sample variances. 
+
+In the results section we will see how this approach affects the distances calculated amongst the sequences in a sample.  
+This filter design may be considered as semi-analagous to that of a \textit{matched filter} from 
 traditional signals processing.  
-As a matched filter seeks to exploit a template, so too does the minimal variance filtering technique, in that once 
-a threshold determination is made from the composite variances of the coefficients then each of the PS are
-matched to it  by selection only if the PS coefficients had a higher variance.  
-The variance filtering technique does not  inspect the composite variances at various lagged values though, and hence is only similar to the lag-zero matched filter. 
+As a matched filter seeks to exploit a template, so too does the minimal variance filtering technique. 
+Once a threshold determination ($\eta^*$) is made from the composite variances of the coefficients 
+each PS is \textit{matched} to it by selection only if that coefficient has a higher variance.  
+The \textit{minimal variance filter} design does not inspect the composite variances at lagged PS alignments, and hence is only similar to the lag-zero \textit{matched filter}. 
 
 \subsection{Automated Filter Learning} 
 
-A second approach to filtering is less \textit{hands-on}, and provides not a binary filter such as the \textit{minimal variance filtering} technique,  but a set of filters 
-that are unique linear combinations of the entire Genomic PS are determined 
-automatically by a Convolutional Neural Network (CNN).  A schematic of the 
-Machine Learning (ML) approach is shown in Figure \ref{fig:mlschem} .
+\noindent A less \textit{hands-on} approach, which we call \textit{Automated Filter Learning}
+provides not a binary filter such as the \textit{minimal variance filtering} technique,  but a set of 
+unique linear combinations of the entire Genomic PS. 
+These filters are learned automatically by a 1-D Convolutional Neural Network (CNN) applied 
+to the full PS, which is designed to classify important attributes of the original genomic 
+sequences. 
+The characteristics which the CNN attempts to classify may vary depending on application, in the 
+SARS-CoV-2 case study described in Section \ref{sec:res} the labels were regional submission 
+data that was extracted from the headers provided by GISAID. 
+A schematic of the Machine Learning (ML) approach is shown in Figure \ref{fig:mlschem} .
 
 \begin{figure}[h!]
 \centering
 \caption{Schematic of Machine Learning approach for automatic filter learning \label{fig:mlschem} }
-\includegraphics[scale=0.5]{Images/Files/afl.png}
+\includegraphics[scale=0.55]{Images/Files/afl.png}
 \end{figure}
 
-As with the previous approach, the size of the filtered PS can be fixed programatically by the researcher,
-here however, the resultant set of filtered PS coefficients actually consist of linear combinations of 
-all of the unfiltered PS coefficients.  This procedure is dependent on having some sort of supervised 
-labels for each of the sequences used to construct the filters.  These labels will help to determine the 
-kinds of filters constructed, so the aspects of the original PS that help differentiate the elements of the 
-sample on the chosen labels will be extracted by the filters learned.  Here the convolutional network 
-layer is applied to the entire length of the PS, we leave it to future work to examine shorter filters which
-slide across the length of the PS.  The length of the filtered PS in this case can be selected as $p$, which
-is the number of different filters to be learned by the CNN.  Note that the filters learned also depends 
-on the Hidden layers between the output and the convolutional layer.  In the results section we will 
-look at a specific architecture that learns filters by attempting to classify the region of submission of 
-the sequences. 
+As with the previous approach, the size of the filtered PS can be selected by the researcher.
+In this case, in contrast to the previous case, the resultant set of filtered PS coefficients actually consist of 
+linear combinations of the unfiltered PS coefficients.  
+In further contrast, this procedure is dependent on having supervised labels for the sequences used to construct 
+the filters.  
+These labels will determine the kinds of filters constructed and the information which they choose to 
+\textit{emphasize}, so the aspects of the original PS that help differentiate the elements of the 
+sample on the chosen labels will be extracted by the filters learned.  
 
-\subsection{Maximal Variance Principal Components}
+The convolutional network layer is applied to the entire length of the PS, we leave it to future work to 
+examine adaptation of shorter filters which slide across the length of the PS to these purposes.  
+The length of the filtered PS in this case can be selected as $p$, the number of filters to be learned by the 
+CNN.  
+The constructed filters also depend (more subtly) on the architecture of the hidden layers between the output 
+and the convolutional layer.  
+In the results section we will look at a specific architecture that learns filters by attempting to classify the 
+region of submission sequences. 
 
-As an extension of the \textit{minimal variance filtering} and hybridized approach, providing linear combinational filters 
-in the same style as those automatically learned in the CNN approach we may consider applying PCA 
-to the highest variance coefficients in the sample from which the filters are constructed. 
-Assuming that the number of samples to construct the filter from $N$ is shorter than the PS 
-length $m$, this technique will select the $N$ highest variance PS coefficients, and apply PCA to them
-in order to produce linear combinations of these PS which maximize the variance, to serve as filters. 
-In this case, the user may select the length of the filtered PS by selecting the first $k$ principal 
+\subsection{Maximal Variance Principal Components Filtering}
+
+\noindent A successor in spirit of \textit{minimal variance filtering} and \textit{automated filter learning}, that provides linear combinational filters in the same style as those automatically learned in \textit{automated filter learning}, \textit{maximal variance principal components filtering} provides the strongest correlation to 
+distances calculated from the unfiltered PS. 
+For the largest subset of PS coefficients possible given $N$ samples (therefore $N$ coefficients), the principal components of the $N$ highest variance PS coefficients in the sample are taken as the filtered PS. 
+When the number of samples, $N$, from which the filter is constructed is less than the length of the PS, $m$, 
+this technique selects the $N$ highest variance PS coefficients, otherwise the entire PS is utilized. 
+In this case, the selection of the length of the filtered PS is made by choosing only the first $k$ principal 
 components. 
-Note that if it is the case that $N \geq m$ then all of the unfiltered PS coefficients may be supplied to 
-the PCA procedure. 
+
+Given the PS of the sample from which to construct the filter as matrix $\pmb{X}$, where each row $i=1,2,\dots,N$ represents a signal, and each column $j=1,2\dots,m$ represents the $j$\textsuperscript{th} PS coefficient.  
+A pre-filtering matrix $\pmb{H}$ may be determined from $\eta^*$ in Equation \ref{eq:var}, such that $\pmb{H}$ is of size $m \times k^*$, where $k^*$ is at most $N$. Each column of $\pmb{H}$ selects the single PS coefficient from $\pmb{X}$ of variance greater than $\eta^*$ and less than the previously selected PS coefficient, such that $\pmb{X}\pmb{H} = \pmb{X^*}$ is of size $N \times k^*$ and contains only the maximal variance coefficients of $\pmb{X}$.  The singular value decomposition (SVD) of the matrix $\pmb{X^*}$ may be written $\pmb{X^*} = \pmb{U}\pmb{\Sigma}\pmb{W}^T$.  The score matrix $\pmb{T} =\pmb{X^*}\pmb{W} = \pmb{U}\pmb{\Sigma}$, Then a post filtering matrix $\pmb{K}$ may 
+be applied to the score matrix, such that $\pmb{K}$ is of size $k^* \times k$ and therefore $\pmb{T}\pmb{K} = \pmb{X^*}\pmb{W}\pmb{K} = \pmb{U}\pmb{\Sigma}\pmb{K} = \pmb{F}$ is the $N \times k$ \textit{maximal variance principal components filtered} representation of the initial PS matrix $\pmb{X}$. 
 
 \section{Results} 
 \label{sec:res}
 
-The procedures described in Section \ref{sec:meth} are applied to a sample of viral genomes
-submitted by various labs during the 2020 SARS-CoV-2 pandemic curated by the GISAID Initiative \cite{gisaid}. 
+\noindent In this section, the three filtering methods: \textit{Minimal variance filtering}, \textit{Automatic filter learning}, and \textit{Maximal Variance Principal Components Filtering} are applied to a sample of viral genomes of the SARS-CoV-2 virus captured from the collection curated by the GISAID Initiative \cite{gisaid} on August 20, 2021.  For a complete listing of contributing labs, follow the link placed in the `Acknowledgements' section of this paper. 
 
 \subsection{Minimal Variance Filtering} 
 
-Firstly, the minimal variance filtering approach is applied to the set of PS for the virus genomes. 
+\noindent First, \textit{minimal variance filtering} is applied to the set of PS for the virus genomes. 
+Figure \ref{fig:coeffvar} shows several views of the PS component variances for the data (the \textit{evenly-scaled} PS are of length 30,563), to assist with visualization of the Filter.
 
 \begin{figure}[h!] 
 \caption{(a) Scatter plot of PS coefficient variances for 1,397 SARS-CoV-2 Genomes, (b) Histogram of PS coefficient variances, (c) Survival Plot of Coefficients by Variance, (d) Pearson's $\rho$ between filtered PS distances and full PS distances. \label{fig:coeffvar}} 
+\vspace{0.5 em}
 \centering
-\includegraphics[scale=0.27]{Images/Files/VarianceFiltCombined.png}
+\includegraphics[scale=0.27]{Images/Files/VarianceFiltCombined.jpg}
 \end{figure}
 
 
-Figure \ref{fig:coeffvar} (a) displays a scatter plot of the variances of each generated set of PS Coefficients for the 1,397 viral genomes included in the study.  On this plot, a filter applied to the 
-coefficients may be selected by examining only the coefficients that have a larger variance than some threshold value, graphically a horizontal line. 
-A histogram of some of the selected coefficients is displayed in Figure \ref{fig:coeffvar} (b), where 
-a filter may graphically be considered as a vertical line, beyond which the area
-highlighted is the amount of coefficients that are included in the distance calculation phase.  
-Figure \ref{fig:coeffvar} (c) displays the survival curve of coefficients by their variance, that is, the
+Figure \ref{fig:coeffvar} (a) is a scatter plot of the sample ($N=1,397$) variances PS Coefficient, $\eta^*$ may 
+be graphically visualized as a horizontal line, below which PS coefficients are discarded. 
+A histogram of PS coefficient variances in Figure \ref{fig:coeffvar} (b), allows graphical visualization of $\eta^*$ as a vertical line, left of which the area highlighted  provides the number of coefficients filtered.  
+Figure \ref{fig:coeffvar} (c) is a survival curve of coefficients by their variance, that is, the
 percentage of coefficients with variance greater than or equal to the ordinate is displayed as the 
-abscissa. Figure \ref{fig:coeffvar} (d) displays the correlation of distances when using the full PS, and the filtered PS with the percentage of coefficients filtered on the x-axis. 
+abscissa. 
+Figure \ref{fig:coeffvar} (d) displays the correlation of distances produced by the filtered and unfiltered PS for a range of coefficients filtered $q$. 
 
 
 \subsection{Automated Filter Learning}
+\vspace{-2 em}
+
 \begin{figure}[h!]
 \centering
+\includegraphics[scale=0.34]{Images/Files/CNNFilters.png}
 \caption{(a) Image produced from scaled Unfiltered PS for all 1,397 Viral genomes (30,563 coefficients) (b) CNN Weights learned for 30,563 PS, for 128 Filters (c) Each of the 1,397 full PS (30,563) filtered into 128 values (d) The 20 highest variances filtered PS among the 128.  \label{fig:CNN128Filts}}
-\includegraphics[scale=0.35]{Images/Files/CNNFilters.png}
 \end{figure}
 
-A CNN for classifying the GISAID August SARS-CoV-2 PS on their region of submission for eight general regions extracted from the headers was implemented and trained using the `keras' package \cite{kerR21}, 
-which extends an interface to the `keras' framework in R.
+A CNN for classifying the GISAID August SARS-CoV-2 PS by submission region for eight general regions extracted from the headers is implemented and trained using the `keras' package \cite{kerR21}.
 
-The initial deep network trained 128 filters, on the entire data set over 20 epochs, with a batch size of 140. 
-The results of these 128 filters are graphically represented in Figure \ref{fig:CNN128Filts}.
-For the comparison section, the CNN is retrained with different numbers of filters in order to provide a 
+The network used 128 filters spanning the full PS on all 1,397 sequences. 
+It was trained for 20 epochs, using a batch size of 100.  
+A graphical display of the learned filters is provided in Figure \ref{fig:CNN128Filts}.
+For the comparison section, the CNN trains different numbers of filters to provide a 
 valid filtered PS set for comparison to the other two methods. 
-\subsection{Maximal Variance Principal Components}
+\subsection{Maximal Variance Principal Components Filtering}
 
-The last of the filtering approaches discussed allows for slightly less customization in terms of the filtered PS 
-length. 
-Here for instance, there are a total of 1,397 sequences, which is less than the length of the unfiltered PS (30,563). 
-This method explicitly seeks to determine the overall linear combination which maximizes the variation across the entire 
-set of sequences. 
-%\begin{figure}[h!] 
-%\centering
-%\includegraphics[scale=0.26]{Images/Files/PCAResults.png}
-%\end{figure} 
+In \textit{Maximal Variance Principal Component Filtering} there is an inherent 
+restriction on the maximum size to which the sequence may be reduced.
+Due to the nature of PCA, the number of components that can be produced from a set of sequences is limited by the number of sequences $N$.  
+This $N$ is the maximum number of PS coefficients that may be considered when 
+producing the filter, so in the case of these 1,397 viral genomes, we are limited to 
+considerations of the PCA of the maximum variance 1,397 PS coefficients. 
+As stated before, when $N$ is of greater length than $m$ this is not of concern, 
+however in this case $N$ is 1,397, and $m$ is much larger than that (30,563). 
+Of course, once the PCA of the 1,397 maximal variance coefficients is performed, 
+selection of the first $k$ components allows for an even greater reduction.
+
+\begin{figure}[h!] 
+\centering
+\caption{(a) Scree Plot showing Variance for first 10 principal components, (b) Biplot showing first component by second component \label{fig:PCAres}}
+\includegraphics[scale=0.26]{Images/Files/PCAResults.jpg}
+\end{figure} 
+
+Figure \ref{fig:PCAres} provides visualization of the resulting PCA for the maximal
+variance 1,397 elements of the PS.  The screeplot in Figure \ref{fig:PCAres} (a) 
+shows that the vast majority of the variance of the set of maximal variance PS 
+coefficients is contained in the first component, as we will see, distances calculated from this single value are correlated with distances calculated from the entire PS with $\rho \approx 0.88$.  The biplot in Figure \ref{fig:PCAres} (b) shows that even the first two coefficients provide a large seperation of the data, notably three pronounced clusters appear.
 
 \subsection{Method Comparison} 
 
 \begin{figure}[h!]
+\centering
+\includegraphics[scale=0.25]{Images/Files/PSFiltMethods.PNG}
 \caption{Filtering Methods Comparisons, by Correlation to Full PS Distances \label{fig:filtcomp}}
-\includegraphics[scale=0.18]{Images/Files/PSFiltMethods.PNG}
 \end{figure}
 
-When comparing the three filtering methods discussed in this work on the SARS-CoV-2 data set, the Principal Components procedure performs 
-the best, when filtering the original PS down to around 1,235 coefficients, however as noted before, one of the primary 
-drawbacks of the PCA procedure is that it can only be used to filter the original PS to the number of sequences used to 
-construct the features, therefore it is likely that the distances produced by the minimal variance filtering for more coefficients than are available in the largest subset produced by the PCA will have greater correlation than achievable with 
-the PCA approach. 
-
-
-Perhaps one of the most surprising aspects of Figure \ref{fig:filtcomp} is the low correlation from the CNN trained 
-filters.  
-Likely these filters extract information more relevant to differentiating the region of submission, than correlating to the 
-full PS distances, which explains this result. 
+\textit{Maximal Variance Principal Components Filtering} produces Euclidean distances which are most linearly related to the Euclidean distances computed from the full PS for the same number of coefficients in the other two methods, as per Figure \ref{fig:filtcomp}.
+That said, recall that \textit{Maximal variance principal components filtering} has the ability to consider a maximum of only $N$ elements from the unfiltered PS (1,397 in this case).  Therefore, there must be some $N^* > N$ such that the \textit{minimal variance filtering} procedure will outperform the \textit{maximal variance principal components filtering's} best possible correlation, which occurs at $N$. 
+Perhaps one of the more surprising aspects of Figure \ref{fig:filtcomp} is the low correlation from the CNN trained filters.  
+These filters extract information more relevant to differentiating the region of submission, than correlating to the full PS distances, and hence are not the best choice of the three methods for correlating to distances from the full PS.
+ 
 \section{Conclusions}
 
-In this work we show that a comparison of a subset of the initial PS produced for comparing genomic 
-sequences can be used to determine distances that are highly correlated with the entire set. 
-This work is beneficial as it allows for a smaller set of the PS than the full length PS to represent genomic signals, and 
-determine distances. 
+Three non-parametric filter designs are described for genomic PS; \textit{minimal variance filtering} where PS coefficients with a between sample variance below a threshold $\eta^*$ determined by a supplied PS coefficient filtering percentage $q$ are discarded. In the SARS-CoV-2 case study, we show this approach to be straightforward, and allow for an excellent size reduction while distances computed using the filtered PS retain a high correlation to distances computed from the full unfiltered PS. \textit{Automated filter learning}, where CNN's classifying sequences on extracted labels (region in the case study), did not provide filters producing distances which correlated as well with the unfiltered distances, suggesting that the filters produced in this procedure may not lend themselves well to representing the unfiltered PS, but perhaps better uses for these filters may be found in automated sorting procedures. \textit{Maximal Variance Principal Components Filtering} produces the best correlation for the largest PS size reductions in our case-study, and allows for excellent compression of the unfiltered PS. 
 
 \label{sec:conc}
 
 \subsection{Directions and Future Works} 
 
-Using pairwise ratios and differences of specific parts of the PS we will be able to use statistical hypothesis testing theory in order to directly derive expressions for the parameters of the F and Variance-Gamma distributions respectively to determine the probability that two sequences came from the same 
-source.  A distributional test for the maximal PS coefficients based on the ratio/difference of the asymptotic 
-distribution in the domain of attraction of the Gumbel distribution (as proven by McGee and Ensor \cite{mcg98}) could also be developed. 
-As previously stated, these filtering techniques may be extended in a few directions, the automatic learning with the CNN 
-can be extended to examine truly convolutional filters of shorter length than the full signal. 
+Using pairwise ratios and differences the PS coefficients we will be able to use statistical hypothesis testing theory to derive expressions for the parameters of an asymptotic F and Variance-Gamma distribution respectively to create a test for whether two sequences come from the same source.  
+A distributional test for the maximal PS coefficients based on the ratio/difference of the asymptotic distribution in the domain of attraction of the Gumbel distribution (as proven by McGee and Ensor \cite{mcg98}) could also be developed. 
+As previously stated, these filtering techniques may be extended in a few directions, the automatic learning with the CNN can be extended to examine truly convolutional filters of shorter length than the full signal. 
 
 
 \appendices
-\vspace{-1 em}
+
 \section*{Acknowledgment}
-{\small
 The work in this paper would not have been possible without the support of the Daehwan Kim Lab in 
 the Lyda Hill Department of Bioinformatics at UTSW.  In the results section the SARS-CoV-2 viral 
 genomes captured from the GISAID Initiative \cite{gisaid} reflect the combined efforts of many labs, 
 for a complete listing please see \url{https://tinyurl.com/8ptzru7s}.
-}
 
 \bibliographystyle{IEEEtrans}
 \bibliography{2021BioCASRef}
 
+{\small
 \section{Acronym Dictionary} 
-{\tiny
+
 \begin{itemize} 
 \item \textbf{ASCII} - American Standard Code for Information Interchange
 \item \textbf{BAM} - Binary Alignment Map. 
 \item \textbf{CNN} - Convolutional Neural Network (Typically 1-Dimensional as applied to Genomic PS)
+\item \textbf{CRAM} - Compressed Alignment Map.
 \item \textbf{DFT} - Discrete Time Fourier Transform (Usually Discrete Loci, Mixed-Radix Transform)
 \item \textbf{DNA} - Deoxyribonucleic Acids (Genetic Material stored in Eukaryotic Nuclei)
 \item \textbf{FASTA/Q} - Fast-All File format (Q - Quality Scores)
@@ -390,29 +389,21 @@ for a complete listing please see \url{https://tinyurl.com/8ptzru7s}.
 \item \textbf{ML} - Machine Learning
 \item \textbf{NT(s)} - Nucleotide(s) (referring arbitrarily to Adenine, Cytosine, Guanine, and Thymine (or Uracil))
 \item \textbf{PCA} - Principal Components Analysis
-\item \textbf{PS} - Power Spectra (Usually Mixed-Radix Fourier Power Spectra)
+\item \textbf{PS} - Power Spectra (Usually Mixed-Radix Fourier Power Spectra), Power Spectral  if followed by the word `coefficients'. 
 \item \textbf{RNA} - Ribonucelic Acids (Genetic Material transcribed from DNA, existing outside Nuclei)
 \item \textbf{SAM} - Sequence Alignment Map (A format usually outputted from aligners which displays the locations of reads along a reference). 
 \item \textbf{SARS-CoV-2} - Sudden Acute Respiratory Syndrome Coronavirus 2 (Virus responsible for 2019- Pandemic)
 \item \textbf{SMU} - Southern Methodist University (University in Dallas Texas) 
+\item \textbf{SVD} - Singular Value Decomposition.
 \item \textbf{UTSW} - University of Texas Southwestern (Medical Center \& University in Dallas, Texas)
 \end{itemize}
-}
+\vspace{-0.5 em}
 
 \section{Software Repository \& Tutorial Video}
-{\small
-This software was written using the R-Programming Language (R version 4.1.0 (2021-05-18) -- ``Camp Pontanezen") \cite{r21}.   For the automated filter learning via CNN the `keras' R Interface is utilized \cite{kerR21}.  The Tensorflow R-Package was also used for 
-accessing the capabilities extended by the tensor flow \cite{tfR21}.  The Genomic DFT power spectra for the viruses as well as the virus data themselves are contained within an R package we wrote \cite{dftR}, which may be installed from the R-console using the following: 
 
-\begin{lstlisting} 
-library(devtools);
-install_github('mathornton01/Genomic-DFT-Yin-R'); 
-\end{lstlisting} 
-\vspace{-2 em}
-
-A short ($\approx$ 3:00) tutorial video showing how to install the software referenced above, and apply 
-the techniques to an example data set is available at \url{https://people.smu.edu/mthornton/} 
+R-Language was used for software development (R version 4.1.0 (2021-05-18) -- ``Camp Pontanezen") \cite{r21}.  The `keras' and `Tensorflow' R Interfaces are utilized \cite{kerR21,tfR21}.  The Genomic PS production is implemented in our R package \cite{dftR}, instructions for installation are on Github: \url{https://github.com/mathornton01/Genomic-DFT-Yin-R}. A short ($\approx$ 3:00) demonstrating the same, and discussing these filtering approaches is provided:\url{https://tinyurl.com/bxdw53z3}.
 }
+
 \begin{IEEEbiographynophoto}{Micah Thornton}
 Is a fourth year Ph.D. candidate in a joint Southern Methodist University (SMU) and University of Texas Southwestern (UTSW) Biostatistics Program.  Micah holds a Bachelor's of Science (B.S) in Computer Engineering, a B.S. in Statistical Science, and a Master's of Science (M.S) in Computer Engineering from SMU. 
 \end{IEEEbiographynophoto}
